@@ -125,7 +125,7 @@ void setBombs(){
   int col = bombLoca / nSlot;
   int row = bombLoca % nSlot;
   slot[row][col] = slotState + 1;
-  println(bombLoca);
+  //println(bombLoca);
   }
   // ---------------------------------------
 }
@@ -206,7 +206,7 @@ void mousePressed(){
        //int clickX = int(map(mouseX , ix , ix+sideLength , 0 , 4));
        //int clickY = int(map(mouseY , iy , iy+sideLength , 0 , 4));
        
-       println(slotState);
+       //println(slotState);
        if(slot[clickX][clickY] == SLOT_BOMB){
        showSlot(clickX , clickY , SLOT_BOMB);
        clickCount--;
