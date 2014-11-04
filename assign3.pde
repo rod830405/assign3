@@ -10,8 +10,7 @@ final int SLOT_SIZE = 100; //每格大小
 int sideLength; // SLOT_SIZE * nSlot
 int ix; // (width - sideLength)/2
 int iy; // (height - sideLength)/2
-int clickX;
-int clickY;
+
 
 // game state
 final int GAME_START = 1;
@@ -20,7 +19,6 @@ final int GAME_WIN = 3;
 final int GAME_LOSE = 4;
 int gameState;
 
-
 // slot state for each slot
 final int SLOT_OFF = 0;
 final int SLOT_SAFE = 1;
@@ -28,7 +26,6 @@ final int SLOT_BOMB = 2;
 final int SLOT_FLAG = 3;
 final int SLOT_FLAG_BOMB = 4;
 final int SLOT_DEAD = 5;
-int slotState = SLOT_SAFE;
 
 PImage bomb, flag, cross ,bg;
 
@@ -71,11 +68,9 @@ void draw(){
           break;
     case GAME_RUN:
           //---------------- put you code here ----
-          clickX = int(map(mouseX , ix , ix+sideLength , 0 , 4));
-          clickY = int(map(mouseY , iy , iy+sideLength , 0 , 4));
           if(clickCount == totalSlots - bombCount){
           gameState = GAME_WIN;
-          }else if(clickCount == clickCount - 1){
+          }else if(clickCount ==  -1){
           gameState = GAME_LOSE;
           }
           // -----------------------------------
@@ -95,7 +90,7 @@ void draw(){
 
 int countNeighborBombs(int col,int row){
   // -------------- Requirement B ---------
-  return 0;
+   return 0;
 }
 
 void setBombs(){
@@ -107,25 +102,20 @@ void setBombs(){
   }
   // -------------- put your code here ---------
   // randomly set bombs
-  //slotState = slotState + 1;
-  /*int [] bombArray = new int [9];
-  for(int i = 0; i < bombCount ; i++){
-  int bombLoca = floor (random(16));
-  int col = bombLoca / nSlot;
-  int row = bombLoca % nSlot;
-  //slotState = slotState + 1;
-  println(bombLoca);
-  slot[row][col] = SLOT_BOMB;
-  }*/
-  
-  int [] bombArray = new int [9];
-  for(int i = 0; i < bombCount ; i++){
-  int bombLoca = floor (random(16));
-  bombArray[i] = bombLoca;
-  int col = bombLoca / nSlot;
-  int row = bombLoca % nSlot;
-  slot[row][col] = slotState + 1;
-  //println(bombLoca);
+  int [] col = new int[bombCount];
+  int [] row = new int[bombCount];
+  for(int i = 0; i<bombCount ; i++){
+  col[i] = int(random(nSlot));
+  row[i] = int(random(nSlot));
+  if(slot[col[i]][row[i]]==SLOT_OFF && slot[col[i]][row[i]]!=SLOT_BOMB){
+   slot[col[i]][row[i]]=SLOT_BOMB;
+   //println(col[i]);
+   //println(row[i]);
+   //println(slot[col[i]][row[i]]);
+  }else{
+  i--;
+  continue ;
+  }
   }
   // ---------------------------------------
 }
@@ -203,17 +193,20 @@ void mousePressed(){
        mouseY >= iy && mouseY <= iy+sideLength){
     
     // --------------- put you code here -------     
-       //int clickX = int(map(mouseX , ix , ix+sideLength , 0 , 4));
-       //int clickY = int(map(mouseY , iy , iy+sideLength , 0 , 4));
-       
-       //println(slotState);
-       if(slot[clickX][clickY] == SLOT_BOMB){
+  int clickX = int(map(mouseX , ix , ix+sideLength , 0 , 4));
+  int clickY = int(map(mouseY , iy , iy+sideLength , 0 , 4));
+       if(slot[clickX][clickY] == SLOT_SAFE){
+       clickCount = clickCount;
+       println(clickCount);
+       }else if(slot[clickX][clickY] == SLOT_BOMB){
        showSlot(clickX , clickY , SLOT_BOMB);
-       clickCount--;
-       }else {
+       clickCount = clickCount - (clickCount+1);
+       }else if(slot[clickX][clickY] == SLOT_OFF){
        showSlot(clickX , clickY , SLOT_SAFE);
        clickCount++;
+       //println(clickCount);
        }
+       
     // -------------------------
     
   }
